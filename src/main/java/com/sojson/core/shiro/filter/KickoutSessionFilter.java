@@ -11,17 +11,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.json.JSONObject;
-
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.sojson.common.utils.LoggerUtils;
 import com.sojson.core.shiro.cache.VCache;
 import com.sojson.core.shiro.session.ShiroSessionRepository;
 import com.sojson.core.shiro.token.manager.TokenManager;
+
+import net.sf.json.JSONObject;
 /**
  * 
  * 开发公司：SOJSON在线工具 <p>
@@ -43,8 +44,10 @@ import com.sojson.core.shiro.token.manager.TokenManager;
  */
 @SuppressWarnings({"unchecked","static-access"})
 public class KickoutSessionFilter extends AccessControlFilter {
+	
+	private static Logger logger = LoggerFactory.getLogger(KickoutSessionFilter.class);
 	//静态注入
-	static String kickoutUrl;
+	private String kickoutUrl;
 	//在线用户
 	final static String ONLINE_USER = KickoutSessionFilter.class.getCanonicalName()+ "_online_user";
 	//踢出状态，true标示踢出
@@ -58,7 +61,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
-		
+		logger.info("============进入KickoutSessionFilter isAccessAllowed");
 		HttpServletRequest httpRequest = ((HttpServletRequest)request);
 		String url = httpRequest.getRequestURI();
 		Subject subject = getSubject(request, response);
@@ -78,7 +81,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 			Map<String, String> resultMap = new HashMap<String, String>();
 			//判断是不是Ajax请求
 			if (ShiroFilterUtils.isAjax(request) ) {
-				LoggerUtils.debug(getClass(), "当前用户已经在其他地方登录，并且是Ajax请求！");
+				logger.info("当前用户已经在其他地方登录，并且是Ajax请求！");
 				resultMap.put("user_status", "300");
 				resultMap.put("message", "您已经在其他地方登录，请重新登录！");
 				out(response, resultMap);
@@ -114,7 +117,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 				//标记session已经踢出
 				oldSession.setAttribute(KICKOUT_STATUS, Boolean.TRUE);
 				shiroSessionRepository.saveSession(oldSession);//更新session
-				LoggerUtils.fmtDebug(getClass(), "kickout old session success,oldId[%s]",oldSessionId);
+				logger.info("kickout old session success,oldId[{}]", oldSessionId);
 			}else{
 				shiroSessionRepository.deleteSession(oldSessionId);
 				infoMap.remove(userId);
@@ -135,7 +138,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
-		
+		logger.info("============进入KickoutSessionFilter onAccessDenied");
 		//先退出
 		Subject subject = getSubject(request, response);
 		subject.logout();
@@ -154,7 +157,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 			out.flush();
 			out.close();
 		} catch (Exception e) {
-			LoggerUtils.error(getClass(), "KickoutSessionFilter.class 输出JSON异常，可以忽略。");
+			logger.error("KickoutSessionFilter.class 输出JSON异常，可以忽略。");
 		}
 	}
 
@@ -163,12 +166,12 @@ public class KickoutSessionFilter extends AccessControlFilter {
 		KickoutSessionFilter.shiroSessionRepository = shiroSessionRepository;
 	}
 
-	public static String getKickoutUrl() {
+	public String getKickoutUrl() {
 		return kickoutUrl;
 	}
 
-	public static void setKickoutUrl(String kickoutUrl) {
-		KickoutSessionFilter.kickoutUrl = kickoutUrl;
+	public void setKickoutUrl(String kickoutUrl) {
+		this.kickoutUrl = kickoutUrl;
 	}
 	
 	

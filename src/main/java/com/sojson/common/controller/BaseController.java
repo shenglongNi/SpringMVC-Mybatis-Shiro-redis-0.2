@@ -39,7 +39,6 @@ import com.sojson.common.utils.StringUtils;
  */
 public class BaseController {
 
-	
 	protected int pageNo =1;
 	public static  int pageSize = 10;
 	protected final static Logger logger = Logger.getLogger(BaseController.class);

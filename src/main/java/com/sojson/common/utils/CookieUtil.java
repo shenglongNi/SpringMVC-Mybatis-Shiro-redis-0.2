@@ -23,8 +23,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class CookieUtil {
 
+	private static Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 	/**
 	 * 设置cookie
 	 * 
@@ -45,7 +50,7 @@ public class CookieUtil {
 			cookie.setPath("/");
 			response.addCookie(cookie);
 		} catch (Exception ex) {
-			LoggerUtils.error(CookieUtil.class, "创建Cookies发生异常！", ex);
+			logger.error("创建Cookies发生异常！", ex);
 		}
 	}
 
@@ -71,7 +76,7 @@ public class CookieUtil {
 				bool = true;
 			}
 		} catch (Exception ex) {
-			LoggerUtils.error(CookieUtil.class, "清空Cookies发生异常！", ex);
+			logger.error("清空Cookies发生异常！", ex);
 		}
 		return bool;
 	}
@@ -99,7 +104,7 @@ public class CookieUtil {
 				bool = true;
 			}
 		} catch (Exception ex) {
-			LoggerUtils.error(CookieUtil.class, "清空Cookies发生异常！", ex);
+			logger.error("清空Cookies发生异常！", ex);
 		}
 		return bool;
 	}
@@ -126,7 +131,7 @@ public class CookieUtil {
 
 			}
 		} catch (Exception ex) {
-			LoggerUtils.error(CookieUtil.class, "获取Cookies发生异常！", ex);
+			logger.error("获取Cookies发生异常！", ex);
 		}
 		return string;
 	}

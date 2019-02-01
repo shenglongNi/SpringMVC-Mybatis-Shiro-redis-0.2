@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
@@ -40,11 +41,13 @@ import com.sojson.core.shiro.session.SessionStatus;
  * 
  */
 public class SimpleAuthFilter extends AccessControlFilter {
-
+	
+	private static Logger logger = Logger.getLogger(SimpleAuthFilter.class);
+	
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
-
+		logger.info("=================进入SimpleAuthFilter isAccessAllowed");
 		HttpServletRequest httpRequest = ((HttpServletRequest)request);
 		String url = httpRequest.getRequestURI();
 		if(url.startsWith("/open/")){
@@ -71,6 +74,7 @@ public class SimpleAuthFilter extends AccessControlFilter {
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
 		
+		logger.info("=================进入SimpleAuthFilter onAccessDenied");
 		//先退出
 		Subject subject = getSubject(request, response);
 		subject.logout();

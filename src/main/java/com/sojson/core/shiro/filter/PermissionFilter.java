@@ -8,6 +8,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
@@ -34,10 +35,14 @@ import com.sojson.common.utils.LoggerUtils;
  * 
  */
 public class PermissionFilter extends AccessControlFilter {
+	
+	private static Logger logger = Logger.getLogger(PermissionFilter.class);
+	
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
 		
+		logger.info("===============进入PermissionFilter isAccessAllowed");
 		//先判断带参数的权限判断
 		Subject subject = getSubject(request, response);
 		if(null != mappedValue){
@@ -66,7 +71,7 @@ public class PermissionFilter extends AccessControlFilter {
 		}
 		if(ShiroFilterUtils.isAjax(request)){
 			Map<String,String> resultMap = new HashMap<String, String>();
-			LoggerUtils.debug(getClass(), "当前用户没有登录，并且是Ajax请求！");
+			logger.info("当前用户没有登录，并且是Ajax请求！");
 			resultMap.put("login_status", "300");
 			resultMap.put("message", "\u5F53\u524D\u7528\u6237\u6CA1\u6709\u767B\u5F55\uFF01");//当前用户没有登录！
 			ShiroFilterUtils.out(response, resultMap);
@@ -77,7 +82,7 @@ public class PermissionFilter extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
-		
+		logger.info("===============进入PermissionFilter onAccessDenied");
 			Subject subject = getSubject(request, response);  
 	        if (null == subject.getPrincipal()) {//表示没有登录，重定向到登录页面  
 	            saveRequest(request);  

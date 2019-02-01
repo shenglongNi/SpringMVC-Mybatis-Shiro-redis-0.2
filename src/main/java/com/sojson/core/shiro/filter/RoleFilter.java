@@ -1,5 +1,7 @@
 package com.sojson.core.shiro.filter;
 
+import java.util.Arrays;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +10,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
+
+import jxl.common.Logger;
 /**
  * 
  * 开发公司：SOJSON在线工具 <p>
@@ -29,13 +33,17 @@ import org.apache.shiro.web.util.WebUtils;
  */
 public class RoleFilter extends AccessControlFilter {
 
+	private static Logger logger = Logger.getLogger(RoleFilter.class);
+	
 	static final String LOGIN_URL = "http://www.sojson.com/user/open/toLogin.shtml";
 	static final String UNAUTHORIZED_URL = "http://www.sojson.com/unauthorized.html";
 	
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
+		
 		String[] arra = (String[])mappedValue;
+		logger.info("==========进入RoleFilter isAccessAllowed， mappedValue:" + Arrays.toString(arra));
 		
 		Subject subject = getSubject(request, response);
 		for (String role : arra) {
@@ -49,7 +57,7 @@ public class RoleFilter extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
-		
+		logger.info("==========进入RoleFilter onAccessDenied ");
 			Subject subject = getSubject(request, response);  
 	        if (subject.getPrincipal() == null) {//表示没有登录，重定向到登录页面  
 	            saveRequest(request);  

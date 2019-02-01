@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
  * @version 1.0,2016年6月2日 <br/>
  * 
  */
+@Deprecated
 public class LoggerUtils {
 	/**
 	 * 是否开启Debug

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,8 @@ import com.sojson.permission.service.RoleService;
 @Scope(value="prototype")
 @RequestMapping("open")
 public class CommonController extends BaseController {
+	
+	private  static Logger logger = LoggerFactory.getLogger(CommonController.class);
 	@Resource
 	RoleService roleService;
 	@RequestMapping("refreshDB")
@@ -79,8 +83,7 @@ public class CommonController extends BaseController {
 			view.addObject("line", line);
 			view.addObject("clazz", clazz);
 			view.addObject("methodName",methodName);
-			LoggerUtils.fmtError(getClass(), "line:%s,clazz:%s,fileName:%s,methodName:%s()",
-					line,clazz,fileName,methodName);
+			logger.info("line:{}, clazz:{}, fileName:{}, methodName:{}", new Object[]{line, clazz, fileName, methodName});
 		}
 		return view;
 	}
@@ -105,7 +108,7 @@ public class CommonController extends BaseController {
 	        int w = 146, h = 33;  
 	        VerifyCodeUtils.outputImage(w, h, response.getOutputStream(), verifyCode); 
 		} catch (Exception e) {
-			LoggerUtils.fmtError(getClass(),e, "获取验证码异常：%s",e.getMessage());
+			logger.error("获取验证码异常：" + e.getMessage(), e);
 		}
 	}
 	
@@ -133,7 +136,7 @@ public class CommonController extends BaseController {
 	        System.out.println( captcha.text().toLowerCase());
 	        TokenManager.setVal2Session(VerifyCodeUtils.V_CODE, captcha.text().toLowerCase());  
 		} catch (Exception e) {
-			LoggerUtils.fmtError(getClass(),e, "获取验证码异常：%s",e.getMessage());
+			logger.error("获取验证码异常：" + e.getMessage(), e);
 		}
 	}
 	/**
@@ -158,7 +161,7 @@ public class CommonController extends BaseController {
 			//存入Session
 			session.setAttribute("_code",captcha.text().toLowerCase());  
 		} catch (Exception e) {
-			LoggerUtils.fmtError(getClass(),e, "获取验证码异常：%s",e.getMessage());
+			logger.error("获取验证码异常：" + e.getMessage(), e);
 		}
 	}
 	/**

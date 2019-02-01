@@ -15,16 +15,31 @@
 	</properties>
 
 	<build>
+		<finalName>shiro-demo</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<!-- <plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<configuration>
+					<webAppConfig>
+						<contextPath>/shiro-test</contextPath>
+					</webAppConfig>
+					<connectors>
+  					<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+  						<port>8080</port>
+  					</connector>
+  				</connectors>
+				</configuration>
+			</plugin> -->
 		</plugins>
 		<resources>
 			<resource>
@@ -272,17 +287,18 @@
 			<groupId>net.mingsoft</groupId>
 			<artifactId>shiro-freemarker-tags</artifactId>
 			<version>0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.shiro</groupId>
+					<artifactId>shiro-all</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- freemarker + shiro（标签） begin -->
 		<dependency>
 			<artifactId>quartz</artifactId>
 			<groupId>org.opensymphony.quartz</groupId>
 			<version>1.6.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-all</artifactId>
-			<version>1.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
@@ -347,5 +363,15 @@
 		<!-- /Spring 升级4+ 依赖的JSON包 -->
 
 
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.2.3</version>
+		</dependency>
 	</dependencies>
 </project>

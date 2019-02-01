@@ -8,6 +8,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sojson.common.utils.LoggerUtils;
 
 import net.sf.json.JSONObject;
@@ -34,6 +37,7 @@ import net.sf.json.JSONObject;
  * 
  */
 public class ShiroFilterUtils {
+	private static Logger logger = LoggerFactory.getLogger(ShiroFilterUtils.class);
 	final static Class<? extends ShiroFilterUtils> CLAZZ = ShiroFilterUtils.class;
 	//登录页面
 	static final String LOGIN_URL = "/u/login.shtml";
@@ -64,7 +68,7 @@ public class ShiroFilterUtils {
 			out = response.getWriter();
 			out.println(JSONObject.fromObject(resultMap).toString());
 		} catch (Exception e) {
-			LoggerUtils.fmtError(CLAZZ, e, "输出JSON报错。");
+			logger.info("输出JSON报错。{}", e);
 		}finally{
 			if(null != out){
 				out.flush();

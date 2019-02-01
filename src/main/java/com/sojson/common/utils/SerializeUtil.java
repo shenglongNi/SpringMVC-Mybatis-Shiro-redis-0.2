@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sf.json.JSONObject;
 
 /**
@@ -30,6 +33,7 @@ import net.sf.json.JSONObject;
  */
 @SuppressWarnings("unchecked")
 public class SerializeUtil {
+	private static Logger logger = LoggerFactory.getLogger(SerializeUtil.class);
 	static final Class<?> CLAZZ = SerializeUtil.class;
 	
     public static byte[] serialize(Object value) {
@@ -47,7 +51,7 @@ public class SerializeUtil {
             bos.close();
             rv = bos.toByteArray();
         } catch (Exception e) {
-        	LoggerUtils.fmtError(CLAZZ,e, "serialize error %s", JSONObject.fromObject(value));
+        	logger.info("serialize error {}", JSONObject.fromObject(value));
         } finally {
             close(os);
             close(bos);
@@ -71,7 +75,7 @@ public class SerializeUtil {
                 rv = is.readObject();
             }
         } catch (Exception e) {
-        	 LoggerUtils.fmtError(CLAZZ,e, "serialize error %s", in);
+        	logger.error("serialize error {}", in);
         } finally {
             close(is);
             close(bis);
@@ -84,7 +88,7 @@ public class SerializeUtil {
             try {
                 closeable.close();
             } catch (IOException e) {
-            	 LoggerUtils.fmtError(CLAZZ, "close stream error");
+            	logger.error("close stream error, {}", e);
             }
     }
 

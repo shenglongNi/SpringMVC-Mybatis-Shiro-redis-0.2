@@ -94,10 +94,12 @@ public class RoleController extends BaseController {
 	/**
 	 * 我的权限 bootstrap tree data
 	 * @return
+	 * @throws InterruptedException 
 	 */
 	@RequestMapping(value="getPermissionTree",method=RequestMethod.POST)
 	@ResponseBody
-	public List<Map<String, Object>> getPermissionTree(){
+	public List<Map<String, Object>> getPermissionTree() throws InterruptedException{
+//		Thread.currentThread().sleep(3000);
 		//查询我所有的角色 ---> 权限
 		List<URole> roles = roleService.findNowAllPermission();
 		//把查询出来的roles 转换成bootstarp 的 tree数据
